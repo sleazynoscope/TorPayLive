@@ -1,0 +1,39 @@
+### **Step 4: Add Demo Code**  
+#### 1. **`app/kyc/mock_verification.py`**  
+```python
+# Mock KYC (Replace with SumSub/IDology API in production)
+def mock_verify(user_data):
+    # Simulate a check (always passes in demo)
+    return {"status": "verified"}
+```
+
+#### 2. **`app/payments/plaid_demo.py`**  
+```python
+import plaid
+from decouple import config
+
+CLIENT_ID = config("PLAID_CLIENT_ID")
+SECRET = config("PLAID_SECRET")
+
+client = plaid.Client(client_id=CLIENT_ID, secret=SECRET, environment="sandbox")
+
+def create_link_token(user_id):
+    # Sandbox only
+    return client.LinkToken.create({...})
+```
+
+#### 3. **`app/telegram_bot/marketplace_bot.py`**  
+```python
+from telegram import Update
+from telegram.ext import Updater
+
+def start(update: Update, _):
+    update.message.reply_text("DEMO: Public marketplace. All activity is logged.")
+    # Add authentication checks in production
+
+updater = Updater(config("TELEGRAM_BOT_TOKEN"))
+updater.dispatcher.add_handler(CommandHandler("start", start))
+updater.start_polling()
+```
+
+---
